@@ -1,4 +1,23 @@
 const Task = require('../models/Task');
+const User = require('../models/User');
+const mongoose = require('mongoose');
+
+const validateAssignment = async (assignedTo, res) => {
+  if (!mongoose.Types.ObjectId.isValid(assignedTo)) {
+    res.status(400).json({ message: 'Invalid user ID format.' });
+    return false;
+  }
+  const user = await User.findById(assignedTo);
+  if (!user) {
+    res.status(404).json({ message: 'Assigned user not found.' });
+    return false;
+  }
+  if (user.role !== 'Talent') {
+    res.status(400).json({ message: 'Tasks can only be assigned to Talent users.' });
+    return false;
+  }
+  return true;
+};
 
 // @desc  Get all tasks
 // @route GET /api/tasks
@@ -51,6 +70,11 @@ const createTask = async (req, res) => {
     return res.status(400).json({ message: 'Title and description are required.' });
   }
 
+  if (assignedTo) {
+    const isValid = await validateAssignment(assignedTo, res);
+    if (!isValid) return;
+  }
+
   try {
     const task = await Task.create({
       title: title.trim(),
@@ -71,6 +95,11 @@ const createTask = async (req, res) => {
 // @route PUT /api/tasks/:id
 // @access Admin
 const updateTask = async (req, res) => {
+  if (req.body.assignedTo) {
+    const isValid = await validateAssignment(req.body.assignedTo, res);
+    if (!isValid) return;
+  }
+
   try {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
