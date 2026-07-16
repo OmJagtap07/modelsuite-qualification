@@ -1,5 +1,6 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
+const Submission = require('../models/Submission');
 const mongoose = require('mongoose');
 
 const validateAssignment = async (assignedTo, res) => {
@@ -123,7 +124,9 @@ const deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
-    // — orphaned Submission documents remain in DB after task deletion
+    
+    // Delete all submissions associated with the task before deleting the task itself
+    await Submission.deleteMany({ taskId: req.params.id });
     await Task.findByIdAndDelete(req.params.id);
 
     res.json({ message: 'Task deleted' });
