@@ -1,4 +1,4 @@
-﻿const Task = require('../models/Task');
+const Task = require('../models/Task');
 
 // @desc  Get all tasks
 // @route GET /api/tasks
@@ -40,10 +40,21 @@ const getTaskById = async (req, res) => {
 const createTask = async (req, res) => {
   const { title, description, status, assignedTo, dueDate } = req.body;
 
+  if (
+    !title ||
+    !description ||
+    typeof title !== 'string' ||
+    typeof description !== 'string' ||
+    title.trim() === '' ||
+    description.trim() === ''
+  ) {
+    return res.status(400).json({ message: 'Title and description are required.' });
+  }
+
   try {
     const task = await Task.create({
-      title,
-      description,
+      title: title.trim(),
+      description: description.trim(),
       status,
       assignedTo: assignedTo || null,
       dueDate,
