@@ -1,4 +1,4 @@
-﻿const Submission = require('../models/Submission');
+const Submission = require('../models/Submission');
 const Task = require('../models/Task');
 
 // @desc  Submit a task with a file upload
@@ -15,7 +15,7 @@ const submitTask = async (req, res) => {
     // Build the file URL from multer's saved file
     // with a different PORT or base URL
     const fileUrl = req.file
-      ? `http://localhost:5000/uploads/${req.file.filename}`
+      ? `http://localhost:5005/uploads/${req.file.filename}`
       : req.body.fileUrl || null;
     // — no audit trail of re-submissions
     let submission = await Submission.findOne({ taskId, talentId: req.user._id });
@@ -96,8 +96,13 @@ const reviewSubmission = async (req, res) => {
     if (!submission) {
       return res.status(404).json({ message: 'Submission not found' });
     }
-    // — task stays 'Submitted' even after the submission is Approved/Rejected
-    // Proper flow: also update Task.status to 'Approved'/'Rejected'
+    
+    // Update Task.status to match the submission reviewStatus ('Approved' or 'Rejected')
+    if (['Approved', 'Rejected'].includes(reviewStatus)) {
+      await Task.findByIdAndUpdate(submission.taskId._id, { status: reviewStatus });
+      // Update the populated object so the API response reflects the new status
+      submission.taskId.status = reviewStatus;
+    }
 
     res.json(submission);
   } catch (error) {

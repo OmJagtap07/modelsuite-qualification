@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { deleteTask } from '../../api/tasks';
+import ConfirmationModal from '../common/ConfirmationModal';
 
 /* ── SVG Action Icons ── */
 const IconEdit = () => (
@@ -42,14 +44,17 @@ const STATUS_CLASS = {
 };
 
 const TasksTable = ({ tasks, onEdit, onRefresh }) => {
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
-  const handleDelete = async (id) => {
+  const confirmDelete = async () => {
+    if (!taskToDelete) return;
     try {
-      await deleteTask(id);
+      await deleteTask(taskToDelete._id);
       onRefresh();
     } catch {
       alert('Failed to delete task');
     }
+    setTaskToDelete(null);
   };
 
   if (tasks.length === 0) {
@@ -145,7 +150,7 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
                     <IconEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(task._id)}
+                    onClick={() => setTaskToDelete(task)}
                     title="Delete task"
                     className="action-btn action-btn-delete">
                     <IconDelete />
@@ -156,6 +161,16 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
           ))}
         </tbody>
       </table>
+      <ConfirmationModal
+        isOpen={!!taskToDelete}
+        title="Delete Task"
+        message={`Are you sure you want to delete the task "${taskToDelete?.title}"? This action cannot be undone.`}
+        confirmText="Delete Task"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setTaskToDelete(null)}
+      />
     </div>
   );
 };
