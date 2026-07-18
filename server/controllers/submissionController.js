@@ -97,12 +97,7 @@ const reviewSubmission = async (req, res) => {
       return res.status(404).json({ message: 'Submission not found' });
     }
     
-    // Update Task.status to match the submission reviewStatus ('Approved' or 'Rejected')
-    if (['Approved', 'Rejected'].includes(reviewStatus)) {
-      await Task.findByIdAndUpdate(submission.taskId._id, { status: reviewStatus });
-      // Update the populated object so the API response reflects the new status
-      submission.taskId.status = reviewStatus;
-    }
+
 
     res.json(submission);
   } catch (error) {

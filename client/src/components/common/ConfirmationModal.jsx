@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const ConfirmationModal = ({
   isOpen,
@@ -10,6 +10,24 @@ const ConfirmationModal = ({
   onConfirm,
   onCancel,
 }) => {
+  const cancelRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    // Move keyboard focus to the safest existing interactive element
+    cancelRef.current?.focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onCancel]);
+
   if (!isOpen) return null;
 
   // Determine styles based on variant
@@ -24,10 +42,14 @@ const ConfirmationModal = ({
     >
       <div 
         className="bg-bg-card border border-border rounded-xl w-full max-w-sm shadow-[0_32px_80px_rgba(0,0,0,0.6)] animate-modal-in"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmation-title"
+        aria-describedby="confirmation-desc"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-          <h2 className="text-[17px] font-semibold text-text-primary">{title}</h2>
+          <h2 id="confirmation-title" className="text-[17px] font-semibold text-text-primary">{title}</h2>
           <button 
             onClick={onCancel}
             className="bg-transparent border-none text-text-muted text-base cursor-pointer px-2 py-1 rounded-md hover:bg-bg-hover hover:text-text-primary transition-all"
@@ -38,7 +60,7 @@ const ConfirmationModal = ({
 
         {/* Body */}
         <div className="p-6">
-          <p className="text-[15px] text-text-muted leading-relaxed">
+          <p id="confirmation-desc" className="text-[15px] text-text-muted leading-relaxed">
             {message}
           </p>
         </div>
@@ -46,6 +68,7 @@ const ConfirmationModal = ({
         {/* Footer */}
         <div className="flex gap-3 px-6 pb-6 pt-1">
           <button 
+            ref={cancelRef}
             onClick={onCancel}
             className="flex-1 py-2.5 bg-bg-input text-text-muted border border-border rounded-lg text-sm font-medium cursor-pointer hover:bg-bg-hover hover:text-text-primary transition-all font-sans"
           >

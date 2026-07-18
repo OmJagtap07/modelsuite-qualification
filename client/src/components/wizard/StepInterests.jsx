@@ -53,8 +53,16 @@ const StepInterests = ({ formData, updateData }) => {
         {AVAILABLE_INTERESTS.map((item) => (
           <div
             key={item.id}
+            role="button"
+            tabIndex={0}
             className={`wizard-card ${formData.interests.includes(item.id) ? 'wizard-card-active' : ''}`}
             onClick={() => toggleInterest(item.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleInterest(item.id);
+              }
+            }}
           >
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${formData.interests.includes(item.id) ? 'bg-blue-500/20 text-blue-400' : 'bg-white/5 text-white/50'}`}>
               {item.icon}

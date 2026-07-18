@@ -10,6 +10,7 @@ const STATUS_CLASS = {
 };
 
 const TaskCard = ({ task, showClaimButton = false, onClaimed }) => {
+  const dueStatus = getDueDateStatus(task.dueDate);
 
   const handleClaim = async () => {
     try {
@@ -45,9 +46,9 @@ const TaskCard = ({ task, showClaimButton = false, onClaimed }) => {
           <span className="text-[12px] text-text-faint">
             {task.dueDate ? `Due: ${task.dueDate}` : 'No due date'}
           </span>
-          {getDueDateStatus(task.dueDate) && (
-            <span className={`inline-block px-2 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${getDueDateStatus(task.dueDate).replace(' ', '')}`}>
-              {getDueDateStatus(task.dueDate)}
+          {dueStatus && (
+            <span className={`inline-block px-2 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${dueStatus.replace(' ', '')}`}>
+              {dueStatus}
             </span>
           )}
         </div>

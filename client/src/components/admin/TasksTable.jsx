@@ -85,7 +85,9 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task, i) => (
+          {tasks.map((task, i) => {
+            const dueStatus = getDueDateStatus(task.dueDate);
+            return (
             <tr key={task._id}
               className="table-row table-row-animate"
               style={{ animationDelay: `${i * 0.05}s` }}>
@@ -134,9 +136,9 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
               {/* Due date */}
               <td className="table-td" style={{ color: '#6B7280', whiteSpace: 'nowrap' }}>
                 {fmtDate(task.dueDate)}
-                {getDueDateStatus(task.dueDate) && (
-                  <span className={`ml-2 inline-block px-2.5 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${getDueDateStatus(task.dueDate).replace(' ', '')}`}>
-                    {getDueDateStatus(task.dueDate)}
+                {dueStatus && (
+                  <span className={`ml-2 inline-block px-2.5 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${dueStatus.replace(' ', '')}`}>
+                    {dueStatus}
                   </span>
                 )}
               </td>
@@ -164,7 +166,8 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
                 </div>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
       <ConfirmationModal

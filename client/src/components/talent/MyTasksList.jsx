@@ -62,7 +62,9 @@ const MyTasksList = ({ tasks, onRefresh }) => {
   return (
     <>
       <div className="flex flex-col gap-2">
-        {tasks.map((task, i) => (
+        {tasks.map((task, i) => {
+          const dueStatus = getDueDateStatus(task.dueDate);
+          return (
           <div key={task._id}
             className="task-card table-row-animate"
             style={{ animationDelay: `${i * 0.06}s` }}>
@@ -79,9 +81,9 @@ const MyTasksList = ({ tasks, onRefresh }) => {
                     <IconCalendar />
                     Due {fmtDate(task.dueDate)}
                   </p>
-                  {getDueDateStatus(task.dueDate) && (
-                    <span className={`inline-block px-2 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${getDueDateStatus(task.dueDate).replace(' ', '')}`}>
-                      {getDueDateStatus(task.dueDate)}
+                  {dueStatus && (
+                    <span className={`inline-block px-2 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${dueStatus.replace(' ', '')}`}>
+                      {dueStatus}
                     </span>
                   )}
                 </div>
@@ -90,7 +92,7 @@ const MyTasksList = ({ tasks, onRefresh }) => {
 
             {/* Actions */}
             <div className="flex items-center gap-2 shrink-0">
-              {(task.status === 'Claimed' || task.status === 'Submitted' || task.status === 'Rejected') && (
+              {(task.status === 'Claimed' || task.status === 'Submitted') && (
                 <button
                   onClick={() => setSubmitTarget(task)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold cursor-pointer border transition-all"
@@ -110,7 +112,7 @@ const MyTasksList = ({ tasks, onRefresh }) => {
                     e.currentTarget.style.borderColor = 'rgba(59,130,246,0.25)';
                   }}>
                   <IconUpload />
-                  {task.status === 'Submitted' || task.status === 'Rejected' ? 'Re-submit' : 'Submit'}
+                  {task.status === 'Submitted' ? 'Re-submit' : 'Submit'}
                 </button>
               )}
 
@@ -129,7 +131,8 @@ const MyTasksList = ({ tasks, onRefresh }) => {
               )}
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {submitTarget && (

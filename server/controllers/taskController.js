@@ -20,6 +20,31 @@ const validateAssignment = async (assignedTo, res) => {
   return true;
 };
 
+const validatePayload = (req, res) => {
+  if (req.body.dueDate) {
+    const { dueDate } = req.body;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
+      res.status(400).json({ message: 'Invalid due date format. Use YYYY-MM-DD.' });
+      return false;
+    }
+    const d = new Date(dueDate);
+    if (isNaN(d.getTime()) || !d.toISOString().startsWith(dueDate)) {
+      res.status(400).json({ message: 'Invalid due date.' });
+      return false;
+    }
+  }
+
+  if (req.body.status) {
+    const allowedStatuses = Task.schema.path('status').enumValues;
+    if (!allowedStatuses.includes(req.body.status)) {
+      res.status(400).json({ message: 'Invalid status.' });
+      return false;
+    }
+  }
+
+  return true;
+};
+
 // @desc  Get all tasks
 // @route GET /api/tasks
 // @access Admin
@@ -76,6 +101,8 @@ const createTask = async (req, res) => {
     if (!isValid) return;
   }
 
+  if (!validatePayload(req, res)) return;
+
   try {
     const task = await Task.create({
       title: title.trim(),
@@ -100,6 +127,8 @@ const updateTask = async (req, res) => {
     const isValid = await validateAssignment(req.body.assignedTo, res);
     if (!isValid) return;
   }
+
+  if (!validatePayload(req, res)) return;
 
   try {
     const task = await Task.findById(req.params.id);

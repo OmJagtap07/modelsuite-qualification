@@ -21,6 +21,22 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const { bio, skills, interests } = req.body;
 
+  if (bio !== undefined && typeof bio !== 'string') {
+    return res.status(400).json({ message: 'Bio must be a string' });
+  }
+
+  if (skills !== undefined) {
+    if (!Array.isArray(skills) || !skills.every(s => typeof s === 'string')) {
+      return res.status(400).json({ message: 'Skills must be an array of strings' });
+    }
+  }
+
+  if (interests !== undefined) {
+    if (!Array.isArray(interests) || !interests.every(i => typeof i === 'string')) {
+      return res.status(400).json({ message: 'Interests must be an array of strings' });
+    }
+  }
+
   try {
     const user = await User.findById(req.user._id);
 
