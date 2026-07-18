@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { deleteTask } from '../../api/tasks';
 import ConfirmationModal from '../common/ConfirmationModal';
+import { getDueDateStatus } from '../../utils/dateUtils';
 
 /* ── SVG Action Icons ── */
 const IconEdit = () => (
@@ -133,6 +134,11 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
               {/* Due date */}
               <td className="table-td" style={{ color: '#6B7280', whiteSpace: 'nowrap' }}>
                 {fmtDate(task.dueDate)}
+                {getDueDateStatus(task.dueDate) && (
+                  <span className={`ml-2 inline-block px-2.5 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${getDueDateStatus(task.dueDate).replace(' ', '')}`}>
+                    {getDueDateStatus(task.dueDate)}
+                  </span>
+                )}
               </td>
 
               {/* Created */}

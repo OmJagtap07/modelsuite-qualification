@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SubmitTaskModal from './SubmitTaskModal';
+import { getDueDateStatus } from '../../utils/dateUtils';
 
 /* ── Status badge classes ── */
 const STATUS_CLASS = {
@@ -73,16 +74,23 @@ const MyTasksList = ({ tasks, onRefresh }) => {
                 {task.title || 'Untitled Task'}
               </p>
               {fmtDate(task.dueDate) && (
-                <p className="flex items-center gap-1.5 text-[11.5px]" style={{ color: '#4B5563' }}>
-                  <IconCalendar />
-                  Due {fmtDate(task.dueDate)}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="flex items-center gap-1.5 text-[11.5px]" style={{ color: '#4B5563' }}>
+                    <IconCalendar />
+                    Due {fmtDate(task.dueDate)}
+                  </p>
+                  {getDueDateStatus(task.dueDate) && (
+                    <span className={`inline-block px-2 py-[2px] rounded-full text-[10px] font-semibold tracking-[0.3px] uppercase status-badge-${getDueDateStatus(task.dueDate).replace(' ', '')}`}>
+                      {getDueDateStatus(task.dueDate)}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
 
             {/* Actions */}
             <div className="flex items-center gap-2 shrink-0">
-              {(task.status === 'Claimed' || task.status === 'Submitted') && (
+              {(task.status === 'Claimed' || task.status === 'Submitted' || task.status === 'Rejected') && (
                 <button
                   onClick={() => setSubmitTarget(task)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold cursor-pointer border transition-all"
@@ -102,7 +110,7 @@ const MyTasksList = ({ tasks, onRefresh }) => {
                     e.currentTarget.style.borderColor = 'rgba(59,130,246,0.25)';
                   }}>
                   <IconUpload />
-                  {task.status === 'Submitted' ? 'Re-submit' : 'Submit'}
+                  {task.status === 'Submitted' || task.status === 'Rejected' ? 'Re-submit' : 'Submit'}
                 </button>
               )}
 
