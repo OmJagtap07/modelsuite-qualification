@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -18,6 +18,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['Admin', 'Talent'],
       default: 'Talent',
+    },
+    bio: {
+      type: String,
+      default: '',
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    interests: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

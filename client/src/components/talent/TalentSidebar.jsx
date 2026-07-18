@@ -25,9 +25,17 @@ const IconLogout = () => (
   </svg>
 );
 
+const IconProfile = () => (
+  <svg className="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="10" cy="7" r="4"/>
+    <path d="M4 18v-2a4 4 0 014-4h4a4 4 0 014 4v2"/>
+  </svg>
+);
+
 const navItems = [
   { label: 'My Dashboard', path: '/talent/dashboard', Icon: IconDashboard },
   { label: 'My Tasks',     path: '/talent/tasks',     Icon: IconTasks     },
+  { label: 'Profile Wizard', path: '/talent/profile', Icon: IconProfile   },
 ];
 
 const TalentSidebar = () => {
