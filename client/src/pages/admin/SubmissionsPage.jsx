@@ -8,6 +8,12 @@ const REVIEW_STATUS_CLASS = {
   Approved: 'status-badge-Approved',
   Rejected: 'status-badge-Rejected',
 };
+const fmtDate = (raw) => {
+  if (!raw) return '-';
+  const d = new Date(raw);
+  if (isNaN(d.valueOf())) return '-';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
 
 const SubmissionsPage = () => {
   const [submissions, setSubmissions] = useState([]);
@@ -128,9 +134,9 @@ const SubmissionsPage = () => {
                         )}
                       </td>
 
-                      {/* Submitted at — raw ISO */}
+                      {/* Submitted at */}
                       <td className={`${tdCls} text-text-muted text-[13px] whitespace-nowrap`}>
-                        {sub.createdAt}
+                        {fmtDate(sub.createdAt)}
                       </td>
 
                       {/* Review status */}
