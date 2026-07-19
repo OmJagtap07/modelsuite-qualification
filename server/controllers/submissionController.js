@@ -1,4 +1,4 @@
-﻿const Submission = require('../models/Submission');
+const Submission = require('../models/Submission');
 const Task = require('../models/Task');
 
 // @desc  Submit a task with a file upload
@@ -96,8 +96,10 @@ const reviewSubmission = async (req, res) => {
     if (!submission) {
       return res.status(404).json({ message: 'Submission not found' });
     }
-    // — task stays 'Submitted' even after the submission is Approved/Rejected
-    // Proper flow: also update Task.status to 'Approved'/'Rejected'
+    if (reviewStatus === 'Approved' && submission.taskId) {
+      await Task.findByIdAndUpdate(submission.taskId._id, { status: 'Completed' });
+      submission.taskId.status = 'Completed';
+    }
 
     res.json(submission);
   } catch (error) {
