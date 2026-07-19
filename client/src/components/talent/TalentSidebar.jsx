@@ -18,6 +18,13 @@ const IconTasks = () => (
   </svg>
 );
 
+const IconSubmissions = () => (
+  <svg className="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/>
+    <path d="M8 10h4M8 14h2M8 6h4"/>
+  </svg>
+);
+
 const IconLogout = () => (
   <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
     <path d="M13 10H3M13 10l-3-3M13 10l-3 3"/>
@@ -26,8 +33,9 @@ const IconLogout = () => (
 );
 
 const navItems = [
-  { label: 'My Dashboard', path: '/talent/dashboard', Icon: IconDashboard },
-  { label: 'My Tasks',     path: '/talent/tasks',     Icon: IconTasks     },
+  { label: 'My Dashboard',   path: '/talent/dashboard',   Icon: IconDashboard   },
+  { label: 'My Tasks',       path: '/talent/tasks',       Icon: IconTasks       },
+  { label: 'My Submissions', path: '/talent/submissions', Icon: IconSubmissions },
 ];
 
 const TalentSidebar = () => {

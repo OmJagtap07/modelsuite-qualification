@@ -77,6 +77,21 @@ const getAllSubmissions = async (req, res) => {
   }
 };
 
+// @desc  Get logged in user's submissions
+// @route GET /api/submissions/me
+// @access Protect
+const getMySubmissions = async (req, res) => {
+  try {
+    const submissions = await Submission.find({ talentId: req.user._id })
+      .populate('taskId', 'title description status dueDate')
+      .sort({ createdAt: -1 });
+
+    res.json(submissions);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc  Approve or Reject a submission
 // @route PUT /api/submissions/:id/review
 // @access Admin
@@ -107,4 +122,4 @@ const reviewSubmission = async (req, res) => {
   }
 };
 
-module.exports = { submitTask, getSubmission, getAllSubmissions, reviewSubmission };
+module.exports = { submitTask, getSubmission, getAllSubmissions, reviewSubmission, getMySubmissions };
