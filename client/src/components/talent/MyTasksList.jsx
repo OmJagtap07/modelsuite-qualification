@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import SubmitTaskModal from './SubmitTaskModal';
 import { getDueDateStatus } from '../../utils/dateUtils';

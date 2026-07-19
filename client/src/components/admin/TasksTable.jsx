@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { deleteTask } from '../../api/tasks';
 import ConfirmationModal from '../common/ConfirmationModal';

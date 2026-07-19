@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { reviewSubmission } from '../../api/submissions';
 import ConfirmationModal from '../common/ConfirmationModal';
