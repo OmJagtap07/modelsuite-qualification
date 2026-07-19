@@ -8,7 +8,7 @@ const validateAssignee = async (assignedTo) => {
     if (!user) return { status: 404, message: 'Assigned user not found.' };
     if (user.role !== 'Talent') return { status: 400, message: 'Tasks can only be assigned to Talent users.' };
     return null;
-  } catch (error) {
+  } catch {
     return { status: 400, message: 'Invalid assigned user ID format.' };
   }
 };
